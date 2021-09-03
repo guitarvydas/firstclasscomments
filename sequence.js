@@ -543,6 +543,7 @@ function plsort (factbase) {
 
 
 var drawioRaw = fs.readFileSync ('sequence.drawio', 'utf-8');
+var transpiler = require('./transpiler.js');
 
 function generatePipeline () {
     var drawioUncompressed = execTranspiler (drawioGrammar, drawioGlue, drawioRaw);
