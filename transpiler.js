@@ -1,10 +1,6 @@
+'use strict'
+
 var ohm = require ('ohm-js');
-
-"use strict"
-
-//var glue = require ('./glue');
-// npm install ohm-js
-'use strict';
 
 const glueGrammar =
       `
@@ -50,19 +46,6 @@ SemanticsSCL {
 }
 `;
 
-
-function ohm_parse (grammar, text) {
-    var parser = ohm.grammar (grammar);
-    var cst = parser.match (text);
-    if (cst.succeeded ()) {
-	return { parser: parser, cst: cst };
-    } else {
-	// process.stderr.write (cst.message + '\n');
-	// process.exit (1);
-	console.log (parser.trace (text).toString ());
-	throw "grammar matching failed";
-    }
-}
 
 var varNameStack = [];
 
@@ -260,8 +243,19 @@ return _result;
     _terminal: function () { return this.primitiveValue; }
 };
 
-function old_transpiler (scnText, grammar, semOperation, semanticsObject) {
-    var { parser, cst } = ohm_parse (grammar, scnText);
+function ohm_parse (grammar, text, errorMessage) {
+    var parser = ohm.grammar (grammar);
+    var cst = parser.match (text);
+    if (cst.succeeded ()) {
+	return { parser: parser, cst: cst };
+    } else {
+	//console.log (parser.trace (text).toString ());
+	throw ("FAIL: " + errorMessage);
+    }
+}
+
+function transpiler (scnText, grammar, semOperation, semanticsObject, errorMessage) {
+    var { parser, cst } = ohm_parse (grammar, scnText, errorMessage);
     var sem = {};
     try {
 	if (cst.succeeded ()) {
@@ -270,7 +264,7 @@ function old_transpiler (scnText, grammar, semOperation, semanticsObject) {
 	    let result = sem (cst)[semOperation]();
 	    return result;
 	} else {
-	    throw "grammar matching failed";
+	    throw ("fail: " + " " + errorMessage);
 	}
     }
     catch (err) {
@@ -278,8 +272,7 @@ function old_transpiler (scnText, grammar, semOperation, semanticsObject) {
     }
 }
 
-//var scope = require ('./scope');
-'use strict'
+
 var _scope;
 
 function scopeStack () {
@@ -339,195 +332,29 @@ function _ruleInit () {
 }
 
 function _ruleEnter (ruleName) {
+    process.stderr.write("enter: ");    process.stderr.write (ruleName.toString ()); process.stderr.write ("\n");
     _scope.pushNew ();
 }
 
 function _ruleExit (ruleName) {
+    process.stderr.write("exit: "); process.stderr.write (ruleName); process.stderr.write ("\n");
     _scope.pop ();
-}
-
-
-
-//require ('./support');
-var atob = require ('atob'); // npm install atob
-var pako = require ('pako'); // npm install pako
-function decodeMxDiagram (encoded) {
-    var data = atob (encoded);
-    var inf = pako.inflateRaw (
-	Uint8Array.from (data, c=>c.charCodeAt (0)), {to: 'string'})
-    var str = decodeURIComponent (inf);
-    return str;
-}
-
-function expandStyle (s) {
-    var sx = s
-	.replace(/"/g,'')
-	.replace(/ellipse;/g,'kind=ellipse;')
-	.replace(/text;/g,'kind=text;')
-	.replace (/([^=]+)=([^;]+);/g, '$1="$2" ');
-    return sx;
-}
-function strMangle (s) {
-        // remove HTML junk added by drawio
-    var ret = s
-	.replace (/&[^ ]+;/g, '\n')
-	.replace (/\\\\/g, '');
-
-    return ret
-        // convert names to be acceptable to SWIPL
-	.replace (/-/g, '__')
-	.replace (/\\/g, '\\\\')
-
-	.replace (/ __g /g, ' -g ')
-	.replace (/__q/g, '-q');
-}
-
-
-var nameIndexTable = [];
-var counter = 1;
-
-function resetNames () {
-    nameIndexTable = [];
-    counter = 1;
-}
-
-/// generic
-function newID (name, quoteds) {
-    var s = stripQuotes (quoteds);
-    scopeModify (name, s);
-    nameIndexTable[s] = counter;
-    counter += 1;
-    return '';
-}
-
-function pushID (name, s) {
-    scopeModify (name, stripQuotes (s));
-    return '';
-}
-
-function getID (name) {
-    var s = scopeGet (name);
-    return refID (s);
-}
-
-
-/// cells
-function newCellID (s) {
-    return newID ('cellid', s);
-}
-
-function pushCellID (s) {
-    return pushID ('cellid', s);
-}
-
-function getCellID () {
-    return getID ('cellid');
-}
-
-function refCellID (s) {
-    return refID (s);
-}
-
-/// diagrams
-function newDiagramID (s) {
-    return newID ('diagramid', s);
-}
-
-function pushDiagramID (s) {
-    return pushID ('diagramid', s);
-}
-
-function getDiagramID () {
-    return getID ('diagramid');
-}
-
-
-
-// //function refIDFat (s) {
-// function refID (s) {
-//     return "id_" + reallyStripQuotes(s);
-// }
-
-// function refIDTiny (s) {
-//     return "id" + s.replace(/"/g,"");
-// }
-
-// function refIDBoth (s) {
-function refID (s) {
-    // use refIDTiny to produce smaller ID's (useful for debugging workbench)
-    var n = nameIndexTable[s];
-    if (n) {
-	return "id" + n.toString();
-    } else {
-	return s;
-    }
-}    
-
-
-function stripQuotes (s) {
-    return s;
-    //return reallyStringQuotes(s);
-}
-
-function reallyStripQuotes (s) {
-    return s.replace (/"/g,"");
-}
-
-
-function setDiagram () {
-    var diagramID = getID ();
-    scopeAdd ('diagram', diagramID);
-}
-
-
-//////// details transpiler //////////
-
-function namify (s) {
-    return s
-	.trim ()
-	.replace (/"/g,'')
-	.replace (/ /g,'__');
-}
-
-function stripQuotes (s) {
-    return s
-	.replace (/"/g,'');
-}
-
-function stripQuotesAddNewlines (s) {
-    var str = stripQuotes (s);
-    if (s === '') {
-	return s;
-    } else {
-	return '\n' + stripQuotes (s) + '\n';
-    }
 }
 
 var fs = require ('fs');
 
-const drawioGrammar = fs.readFileSync ('drawio.ohm', 'utf-8');
-const drawioGlue = fs.readFileSync ('drawio.glue', 'utf-8');
-
-const styleExpanderGrammar = fs.readFileSync ('styleexpander.ohm', 'utf-8');
-const styleExpanderGlue = fs.readFileSync ('styleexpander.glue', 'utf-8');
-
-const attributeEliderGrammar = fs.readFileSync ('attributeelider.ohm', 'utf-8');
-const attributeEliderGlue = fs.readFileSync ('attributeelider.glue', 'utf-8');
-
-const nameTableGrammar = fs.readFileSync ('nametable.ohm', 'utf-8');
-const nameTableGlue = fs.readFileSync ('nametable.glue', 'utf-8');
-
-const emitFactbaseGrammar = fs.readFileSync ('emitFactbase.ohm', 'utf-8');
-const emitFactbaseGlue = fs.readFileSync ('emitFactbase.glue', 'utf-8');
-
-function execTranspiler (grammar, semantics, source) {
+function execTranspiler (source, grammar, semantics, errorMessage) {
     // first pass - transpile glue code to javascript
-    let generatedSCNSemantics = old_transpiler (semantics, glueGrammar, "_glue", glueSemantics);
+    let generatedSCNSemantics = transpiler (semantics, glueGrammar, "_glue", glueSemantics, "(in glue specification) " + errorMessage);
     
-    _ruleInit(); // part of support.js
+	process.stderr.write ("aaaa:    "); process.stderr.write ('\n');
+    _ruleInit();
     try {
+	process.stderr.write ("bbbb:    "); process.stderr.write ('\n');
         let semObject = eval('(' + generatedSCNSemantics + ')');
-        let tr = old_transpiler(source, grammar, "_glue", semObject);
+	process.stderr.write ("cccc:    "); process.stderr.write (generatedSCNSemantics.toString ()); process.stderr.write ('\n');
+        let tr = transpiler(source, grammar, "_glue", semObject, errorMessage);
+	process.stderr.write ("dddd:    "); process.stderr.write ('\n');
 	return tr;
     }
     catch (err) {
@@ -535,23 +362,33 @@ function execTranspiler (grammar, semantics, source) {
     }
 }
 
-function plsort (factbase) {
-    var lines = factbase.split ('\n');
-    lines.sort ();
-    return lines.join('\n');
+function internal_stranspile (sourceString, grammarFileName, glueFileName, errorMessage) {
+    process.stderr.write ("grammar: "); process.stderr.write (grammarFileName); process.stderr.write ('\n');
+    var grammar = fs.readFileSync (grammarFileName, 'utf-8');
+
+    process.stderr.write ("glue:    "); process.stderr.write (glueFileName); process.stderr.write ('\n');
+    var glue = fs.readFileSync (glueFileName, 'utf-8');
+
+    process.stderr.write ("exec:    "); process.stderr.write ('\n');
+    var returnString = execTranspiler (sourceString, grammar, glue, errorMessage);
+
+    process.stderr.write ("done:    "); process.stderr.write (returnString); process.stderr.write ('\n');
+    return returnString;
 }
 
-
-var drawioRaw = fs.readFileSync ('sequence.drawio', 'utf-8');
-
-function generatePipeline () {
-    var drawioUncompressed = execTranspiler (drawioGrammar, drawioGlue, drawioRaw);
-    var stylesExpanded = execTranspiler (styleExpanderGrammar, styleExpanderGlue, drawioUncompressed)
-    var attributesElided = execTranspiler (attributeEliderGrammar, attributeEliderGlue, stylesExpanded)
-    var symbolTable = execTranspiler (nameTableGrammar, nameTableGlue, attributesElided)
-    // N.B. same args as for symbolTable
-    var factbase = execTranspiler (emitFactbaseGrammar, emitFactbaseGlue, attributesElided);
-    var sortedFactbase = plsort (factbase);
-    console.log (sortedFactbase);
+exports.stranspile = (sourceString, grammarFileName, glueFileName, errorMessage) => {
+    return internal_stranspile (sourcString, grammarFileName, glueFileName, errorMessage);
 }
-generatePipeline ();
+
+exports.transpile = (sourceFileName, grammarFileName, glueFileName, errorMessage) => {
+    try {
+	var source = fs.readFileSync (sourceFileName, 'utf-8');
+	process.stderr.write ("source:  "); process.stderr.write (sourceFileName); process.stderr.write ('\n');
+	return internal_stranspile (source, grammarFileName, glueFileName, errorMessage);
+    }
+    catch (err) {
+	process.stderr.write (err.toString ());
+	process.stderr.write ('\n');
+	return '';
+    }
+}    
