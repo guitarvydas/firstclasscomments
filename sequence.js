@@ -523,14 +523,23 @@ function old_execTranspiler (grammar, semantics, source) {
     }
 }
 
+function transpileGlueCodeToJS (glueCodeSource) {
+    let generated = old_transpiler (glueCodeSource, glueGrammar, "_glue", glueSemantics);
+    try {
+        let jsglue = eval('(' + generated + ')');
+	return jsglue;
+    }
+    catch (err) {
+	throw err;
+    }
+}
+
 function execTranspiler (grammar, semantics, source) {
     // first pass - transpile glue code to javascript
-    let generatedSCNSemantics = old_transpiler (semantics, glueGrammar, "_glue", glueSemantics);
-    
+    let jsglue = transpileGlueCodeToJS (semantics);
     _ruleInit(); // part of support.js
     try {
-        let semObject = eval('(' + generatedSCNSemantics + ')');
-        let tr = old_transpiler(source, grammar, "_glue", semObject);
+        let tr = old_transpiler(source, grammar, "_glue", jsglue);
 	return tr;
     }
     catch (err) {
