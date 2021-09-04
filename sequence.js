@@ -360,7 +360,6 @@ function decodeMxDiagram (encoded) {
     var str = decodeURIComponent (inf);
     return str;
 }
-global.decodeMxDiagram = decodeMxDiagram;
 
 
 function expandStyle (s) {
@@ -532,15 +531,14 @@ function plsort (factbase) {
 
 
 var transpiler = require('./transpiler.js');
-
-var support = require ('./support.js');
+var support = {};
 
 function generatePipeline () {
     const drawioGrammar = fs.readFileSync ('drawio.ohm', 'utf-8');
     const drawioGlue = fs.readFileSync ('drawio.glue', 'utf-8');
     var drawioRaw = fs.readFileSync ('sequence.drawio', 'utf-8');
-    //var drawioUncompressed = execTranspiler (drawioGrammar, drawioGlue, drawioRaw);
-    var drawioUncompressed = transpiler.ftranspile ('sequence.drawio', 'drawio.ohm', 'drawio.glue', 'uncompress');
+    var drawioUncompressed = execTranspiler (drawioGrammar, drawioGlue, drawioRaw);
+    //var drawioUncompressed = transpiler.ftranspile ('sequence.drawio', 'drawio.ohm', 'drawio.glue', support, 'uncompress');
 
     const styleExpanderGrammar = fs.readFileSync ('styleexpander.ohm', 'utf-8');
     const styleExpanderGlue = fs.readFileSync ('styleexpander.glue', 'utf-8');
