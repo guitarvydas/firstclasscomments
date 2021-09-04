@@ -40,7 +40,7 @@ SemanticsSCL {
   stringchar = ~"\n" any
 
   rwstringWithNewlines = nlstringchar*
-  nlstringchar = ~"]]" ~"}}" any
+   nlstringchar = ~"]]" ~"}}" any
   code = "{{" ws* codeString "}}" ws* 
   codeString = rwstringWithNewlines
 

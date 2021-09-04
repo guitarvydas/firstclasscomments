@@ -508,6 +508,21 @@ function stripQuotesAddNewlines (s) {
 
 var fs = require ('fs');
 
+function old_execTranspiler (grammar, semantics, source) {
+    // first pass - transpile glue code to javascript
+    let generatedSCNSemantics = old_transpiler (semantics, glueGrammar, "_glue", glueSemantics);
+    
+    _ruleInit(); // part of support.js
+    try {
+        let semObject = eval('(' + generatedSCNSemantics + ')');
+        let tr = old_transpiler(source, grammar, "_glue", semObject);
+	return tr;
+    }
+    catch (err) {
+	throw err;
+    }
+}
+
 function execTranspiler (grammar, semantics, source) {
     // first pass - transpile glue code to javascript
     let generatedSCNSemantics = old_transpiler (semantics, glueGrammar, "_glue", glueSemantics);
