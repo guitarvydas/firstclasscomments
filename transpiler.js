@@ -332,12 +332,12 @@ function _ruleInit () {
 }
 
 function _ruleEnter (ruleName) {
-    process.stderr.write("enter: ");    process.stderr.write (ruleName.toString ()); process.stderr.write ("\n");
+    //process.stderr.write("enter: ");    process.stderr.write (ruleName.toString ()); process.stderr.write ("\n");
     _scope.pushNew ();
 }
 
 function _ruleExit (ruleName) {
-    process.stderr.write("exit: "); process.stderr.write (ruleName); process.stderr.write ("\n");
+    //process.stderr.write("exit: "); process.stderr.write (ruleName); process.stderr.write ("\n");
     _scope.pop ();
 }
 
@@ -347,14 +347,10 @@ function execTranspiler (source, grammar, semantics, errorMessage) {
     // first pass - transpile glue code to javascript
     let generatedSCNSemantics = transpiler (semantics, glueGrammar, "_glue", glueSemantics, "(in glue specification) " + errorMessage);
     
-	process.stderr.write ("aaaa:    "); process.stderr.write ('\n');
     _ruleInit();
     try {
-	process.stderr.write ("bbbb:    "); process.stderr.write ('\n');
         let semObject = eval('(' + generatedSCNSemantics + ')');
-	process.stderr.write ("cccc:    "); process.stderr.write (generatedSCNSemantics.toString ()); process.stderr.write ('\n');
         let tr = transpiler(source, grammar, "_glue", semObject, errorMessage);
-	process.stderr.write ("dddd:    "); process.stderr.write ('\n');
 	return tr;
     }
     catch (err) {
@@ -363,27 +359,19 @@ function execTranspiler (source, grammar, semantics, errorMessage) {
 }
 
 function internal_stranspile (sourceString, grammarFileName, glueFileName, errorMessage) {
-    process.stderr.write ("grammar: "); process.stderr.write (grammarFileName); process.stderr.write ('\n');
     var grammar = fs.readFileSync (grammarFileName, 'utf-8');
-
-    process.stderr.write ("glue:    "); process.stderr.write (glueFileName); process.stderr.write ('\n');
     var glue = fs.readFileSync (glueFileName, 'utf-8');
-
-    process.stderr.write ("exec:    "); process.stderr.write ('\n');
     var returnString = execTranspiler (sourceString, grammar, glue, errorMessage);
-
-    process.stderr.write ("done:    "); process.stderr.write (returnString); process.stderr.write ('\n');
     return returnString;
 }
 
 exports.stranspile = (sourceString, grammarFileName, glueFileName, errorMessage) => {
-    return internal_stranspile (sourcString, grammarFileName, glueFileName, errorMessage);
+    return internal_stranspile (sourceString, grammarFileName, glueFileName, errorMessage);
 }
 
 exports.transpile = (sourceFileName, grammarFileName, glueFileName, errorMessage) => {
     try {
 	var source = fs.readFileSync (sourceFileName, 'utf-8');
-	process.stderr.write ("source:  "); process.stderr.write (sourceFileName); process.stderr.write ('\n');
 	return internal_stranspile (source, grammarFileName, glueFileName, errorMessage);
     }
     catch (err) {

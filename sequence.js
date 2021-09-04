@@ -349,15 +349,6 @@ function _ruleExit (ruleName) {
 
 
 //require ('./support');
-var atob = require ('atob'); // npm install atob
-var pako = require ('pako'); // npm install pako
-function decodeMxDiagram (encoded) {
-    var data = atob (encoded);
-    var inf = pako.inflateRaw (
-	Uint8Array.from (data, c=>c.charCodeAt (0)), {to: 'string'})
-    var str = decodeURIComponent (inf);
-    return str;
-}
 
 function expandStyle (s) {
     var sx = s
@@ -505,21 +496,6 @@ function stripQuotesAddNewlines (s) {
 
 var fs = require ('fs');
 
-const drawioGrammar = fs.readFileSync ('drawio.ohm', 'utf-8');
-const drawioGlue = fs.readFileSync ('drawio.glue', 'utf-8');
-
-const styleExpanderGrammar = fs.readFileSync ('styleexpander.ohm', 'utf-8');
-const styleExpanderGlue = fs.readFileSync ('styleexpander.glue', 'utf-8');
-
-const attributeEliderGrammar = fs.readFileSync ('attributeelider.ohm', 'utf-8');
-const attributeEliderGlue = fs.readFileSync ('attributeelider.glue', 'utf-8');
-
-const nameTableGrammar = fs.readFileSync ('nametable.ohm', 'utf-8');
-const nameTableGlue = fs.readFileSync ('nametable.glue', 'utf-8');
-
-const emitFactbaseGrammar = fs.readFileSync ('emitFactbase.ohm', 'utf-8');
-const emitFactbaseGlue = fs.readFileSync ('emitFactbase.glue', 'utf-8');
-
 function execTranspiler (grammar, semantics, source) {
     // first pass - transpile glue code to javascript
     let generatedSCNSemantics = old_transpiler (semantics, glueGrammar, "_glue", glueSemantics);
@@ -545,7 +521,24 @@ function plsort (factbase) {
 var drawioRaw = fs.readFileSync ('sequence.drawio', 'utf-8');
 var transpiler = require('./transpiler.js');
 
+global.support = require ('./support.js');
+
 function generatePipeline () {
+    const drawioGrammar = fs.readFileSync ('drawio.ohm', 'utf-8');
+    const drawioGlue = fs.readFileSync ('drawio.glue', 'utf-8');
+    
+    const styleExpanderGrammar = fs.readFileSync ('styleexpander.ohm', 'utf-8');
+    const styleExpanderGlue = fs.readFileSync ('styleexpander.glue', 'utf-8');
+    
+    const attributeEliderGrammar = fs.readFileSync ('attributeelider.ohm', 'utf-8');
+    const attributeEliderGlue = fs.readFileSync ('attributeelider.glue', 'utf-8');
+    
+    const nameTableGrammar = fs.readFileSync ('nametable.ohm', 'utf-8');
+    const nameTableGlue = fs.readFileSync ('nametable.glue', 'utf-8');
+    
+    const emitFactbaseGrammar = fs.readFileSync ('emitFactbase.ohm', 'utf-8');
+    const emitFactbaseGlue = fs.readFileSync ('emitFactbase.glue', 'utf-8');
+
     var drawioUncompressed = execTranspiler (drawioGrammar, drawioGlue, drawioRaw);
     var stylesExpanded = execTranspiler (styleExpanderGrammar, styleExpanderGlue, drawioUncompressed)
     var attributesElided = execTranspiler (attributeEliderGrammar, attributeEliderGlue, stylesExpanded)
