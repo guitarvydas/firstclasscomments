@@ -534,9 +534,9 @@ function transpileGlueCodeToJS (glueCodeSource) {
     }
 }
 
-function execTranspiler (grammar, semantics, source) {
+function execTranspiler (grammar, glueSourceCode, source) {
     // first pass - transpile glue code to javascript
-    let jsglue = transpileGlueCodeToJS (semantics);
+    let jsglue = transpileGlueCodeToJS (glueSourceCode);
     _ruleInit(); // part of support.js
     try {
         let tr = old_transpiler(source, grammar, "_glue", jsglue);
