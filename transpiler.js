@@ -4,7 +4,7 @@ var ohm = require ('ohm-js');
 
 
 const glueGrammar =
-      `
+      String.raw`
 SemanticsSCL {
   semantics = ws* semanticsStatement+
   semanticsStatement = ruleName ws* "[" ws* parameters "]" ws* "=" ws* code? rewrites ws*
@@ -32,12 +32,12 @@ SemanticsSCL {
   comment = "%%" notEol* eol
   notEol = ~eol any
   
-  eol = "\\n"
-  ws = comment | eol | " " | "\\t" | "," 
+  eol = "\n"
+  ws = comment | eol | " " | "\t" | "," 
   delimiter = &"]" | &"="
 
   rwstring = stringchar*
-  stringchar = ~"\\n" any
+  stringchar = ~"\n" any
 
   rwstringWithNewlines = nlstringchar*
   nlstringchar = ~"]]" ~"}}" any
