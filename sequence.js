@@ -350,6 +350,19 @@ function _ruleExit (ruleName) {
 
 //require ('./support');
 
+var atob = require ('atob'); // npm install atob
+var pako = require ('pako'); // npm install pako
+function decodeMxDiagram (encoded) {
+    process.stderr.write ('sequence.js/decodeMxDiagram\n');
+    var data = atob (encoded);
+    var inf = pako.inflateRaw (
+	Uint8Array.from (data, c=>c.charCodeAt (0)), {to: 'string'})
+    var str = decodeURIComponent (inf);
+    return str;
+}
+global.decodeMxDiagram = decodeMxDiagram;
+
+
 function expandStyle (s) {
     var sx = s
 	.replace(/"/g,'')
@@ -518,15 +531,17 @@ function plsort (factbase) {
 }
 
 
-var drawioRaw = fs.readFileSync ('sequence.drawio', 'utf-8');
 var transpiler = require('./transpiler.js');
 
-global.support = require ('./support.js');
+var support = require ('./support.js');
 
 function generatePipeline () {
     const drawioGrammar = fs.readFileSync ('drawio.ohm', 'utf-8');
     const drawioGlue = fs.readFileSync ('drawio.glue', 'utf-8');
-    
+    var drawioRaw = fs.readFileSync ('sequence.drawio', 'utf-8');
+    //var drawioUncompressed = execTranspiler (drawioGrammar, drawioGlue, drawioRaw);
+    var drawioUncompressed = transpiler.ftranspile ('sequence.drawio', 'drawio.ohm', 'drawio.glue', 'uncompress');
+
     const styleExpanderGrammar = fs.readFileSync ('styleexpander.ohm', 'utf-8');
     const styleExpanderGlue = fs.readFileSync ('styleexpander.glue', 'utf-8');
     
@@ -539,7 +554,7 @@ function generatePipeline () {
     const emitFactbaseGrammar = fs.readFileSync ('emitFactbase.ohm', 'utf-8');
     const emitFactbaseGlue = fs.readFileSync ('emitFactbase.glue', 'utf-8');
 
-    var drawioUncompressed = execTranspiler (drawioGrammar, drawioGlue, drawioRaw);
+
     var stylesExpanded = execTranspiler (styleExpanderGrammar, styleExpanderGlue, drawioUncompressed)
     var attributesElided = execTranspiler (attributeEliderGrammar, attributeEliderGlue, stylesExpanded)
     var symbolTable = execTranspiler (nameTableGrammar, nameTableGlue, attributesElided)

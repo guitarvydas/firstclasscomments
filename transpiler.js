@@ -2,6 +2,7 @@
 
 var ohm = require ('ohm-js');
 
+
 const glueGrammar =
       `
 SemanticsSCL {
@@ -365,11 +366,11 @@ function internal_stranspile (sourceString, grammarFileName, glueFileName, error
     return returnString;
 }
 
-exports.stranspile = (sourceString, grammarFileName, glueFileName, errorMessage) => {
+exports.transpile = (sourceString, grammarFileName, glueFileName, errorMessage) => {
     return internal_stranspile (sourceString, grammarFileName, glueFileName, errorMessage);
 }
 
-exports.transpile = (sourceFileName, grammarFileName, glueFileName, errorMessage) => {
+exports.ftranspile = (sourceFileName, grammarFileName, glueFileName, errorMessage) => {
     try {
 	var source = fs.readFileSync (sourceFileName, 'utf-8');
 	return internal_stranspile (source, grammarFileName, glueFileName, errorMessage);
