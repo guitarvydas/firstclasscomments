@@ -519,12 +519,12 @@ function transpileGlueCodeToJS (glueCodeSource) {
     }
 }
 
-function execTranspiler (grammar, glueSourceCode, source) {
+function execTranspiler (grammar, glueSourceCode, source, support) {
     // first pass - transpile glue code to javascript
     let jsglue = transpileGlueCodeToJS (glueSourceCode);
     _ruleInit(); // part of support.js
     try {
-        let tr = old_transpiler(source, grammar, "_glue", jsglue, {});
+        let tr = old_transpiler(source, grammar, "_glue", jsglue, support);
 	return tr;
     }
     catch (err) {
@@ -543,10 +543,13 @@ var transpiler = require('./transpiler.js');
 var support = {};
 
 function generatePipeline () {
+
+    let support = {};
+
     const drawioGrammar = fs.readFileSync ('drawio.ohm', 'utf-8');
     const drawioGlue = fs.readFileSync ('drawio.glue', 'utf-8');
     var drawioRaw = fs.readFileSync ('sequence.drawio', 'utf-8');
-    var drawioUncompressed = execTranspiler (drawioGrammar, drawioGlue, drawioRaw);
+    var drawioUncompressed = execTranspiler (drawioGrammar, drawioGlue, drawioRaw, support);
     //var drawioUncompressed = transpiler.ftranspile ('sequence.drawio', 'drawio.ohm', 'drawio.glue', support, 'uncompress');
 
     const styleExpanderGrammar = fs.readFileSync ('styleexpander.ohm', 'utf-8');
@@ -562,11 +565,12 @@ function generatePipeline () {
     const emitFactbaseGlue = fs.readFileSync ('emitFactbase.glue', 'utf-8');
 
 
-    var stylesExpanded = execTranspiler (styleExpanderGrammar, styleExpanderGlue, drawioUncompressed)
-    var attributesElided = execTranspiler (attributeEliderGrammar, attributeEliderGlue, stylesExpanded)
-    var symbolTable = execTranspiler (nameTableGrammar, nameTableGlue, attributesElided)
+
+    var stylesExpanded = execTranspiler (styleExpanderGrammar, styleExpanderGlue, drawioUncompressed, support);
+    var attributesElided = execTranspiler (attributeEliderGrammar, attributeEliderGlue, stylesExpanded, support);
+    var symbolTable = execTranspiler (nameTableGrammar, nameTableGlue, attributesElided, support);
     // N.B. same args as for symbolTable
-    var factbase = execTranspiler (emitFactbaseGrammar, emitFactbaseGlue, attributesElided);
+    var factbase = execTranspiler (emitFactbaseGrammar, emitFactbaseGlue, attributesElided, support);
     var sortedFactbase = plsort (factbase);
     console.log (sortedFactbase);
 }
