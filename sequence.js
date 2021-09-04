@@ -260,8 +260,8 @@ return _result;
     _terminal: function () { return this.primitiveValue; }
 };
 
-function old_transpiler (scnText, grammar, semOperation, semanticsObject) {
-    var { parser, cst } = ohm_parse (grammar, scnText);
+function old_transpiler (scnText, grammar, semOperation, semanticsObject, support) {
+    var { parser, cst } = ohm_parse (grammar, scnText, support);
     var sem = {};
     try {
 	if (cst.succeeded ()) {
@@ -509,7 +509,7 @@ function stripQuotesAddNewlines (s) {
 var fs = require ('fs');
 
 function transpileGlueCodeToJS (glueCodeSource) {
-    let generated = old_transpiler (glueCodeSource, glueGrammar, "_glue", glueSemantics);
+    let generated = old_transpiler (glueCodeSource, glueGrammar, "_glue", glueSemantics, {});
     try {
         let jsglue = eval('(' + generated + ')');
 	return jsglue;
@@ -524,7 +524,7 @@ function execTranspiler (grammar, glueSourceCode, source) {
     let jsglue = transpileGlueCodeToJS (glueSourceCode);
     _ruleInit(); // part of support.js
     try {
-        let tr = old_transpiler(source, grammar, "_glue", jsglue);
+        let tr = old_transpiler(source, grammar, "_glue", jsglue, {});
 	return tr;
     }
     catch (err) {
