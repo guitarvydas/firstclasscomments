@@ -244,8 +244,10 @@ return _result;
     _terminal: function () { return this.primitiveValue; }
 };
 
+var support = {};
+
 function ohm_parse (grammar, text, errorMessage) {
-    var parser = ohm.grammar (grammar);
+    var parser = ohm.grammar (grammar, support);
     var cst = parser.match (text);
     if (cst.succeeded ()) {
 	return { parser: parser, cst: cst };
