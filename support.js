@@ -123,8 +123,16 @@ function refID (s, scope) {
 }    
 
 function stripQuotes (s) {
-    return s;
+    if (s[0] === '"') {
+	return s
+	    .replace (/"/g,'');
+    } else {
+	return s;
+    }
 }
+// function stripQuotes (s) {
+//     return s;
+// }
 
 exports.stripQuotes = (s) => {
     return stripQuotes (s);
@@ -133,3 +141,13 @@ exports.stripQuotes = (s) => {
 exports.mangleNewlines = (s) => {
     return s.replace (/(\r\n|\r|\n)/g,'@~@');
 }
+
+exports.stripQuotesAddNewlines = (s) => {
+    var str = stripQuotes (s);
+    if (s === '') {
+	return s;
+    } else {
+	return '\n' + stripQuotes (s) + '\n';
+    }
+}
+

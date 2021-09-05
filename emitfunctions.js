@@ -260,7 +260,7 @@ return _result;
     _terminal: function () { return this.primitiveValue; }
 };
 
-function transpiler (scnText, grammar, semOperation, semanticsObject) {
+function old_transpiler (scnText, grammar, semOperation, semanticsObject) {
     var { parser, cst } = ohm_parse (grammar, scnText);
     var sem = {};
     try {
@@ -277,10 +277,6 @@ function transpiler (scnText, grammar, semOperation, semanticsObject) {
 	throw err;
     }
 }
-
-exports.transpiler = transpiler;
-exports.glueGrammar = glueGrammar;
-exports.glueSemantics = glueSemantics;
 
 //var scope = require ('./scope');
 'use strict'
@@ -494,8 +490,12 @@ function namify (s) {
 }
 
 function stripQuotes (s) {
-    return s
-	.replace (/"/g,'');
+    if (s[0] === '"') {
+	return s
+	    .replace (/"/g,'');
+    } else {
+	return s;
+    }
 }
 
 function stripQuotesAddNewlines (s) {
@@ -515,12 +515,12 @@ const jsonfactbase = fs.readFileSync ('details.json', 'utf-8');
 
 function execTranspiler (grammar, semantics, source) {
     // first pass - transpile glue code to javascript
-    let generatedSCNSemantics = transpiler (semantics, glueGrammar, "_glue", glueSemantics);
+    let generatedSCNSemantics = old_transpiler (semantics, glueGrammar, "_glue", glueSemantics);
     
     _ruleInit(); // part of support.js
     try {
         let semObject = eval('(' + generatedSCNSemantics + ')');
-        let tr = transpiler(source, grammar, "_glue", semObject);
+        let tr = old_transpiler(source, grammar, "_glue", semObject);
 	return tr;
     }
     catch (err) {
@@ -529,9 +529,12 @@ function execTranspiler (grammar, semantics, source) {
 }
 
 
-function generatePipeline () {
+var transpiler = require ('./transpiler.js');
+
+function pipeline () {
     var functions = execTranspiler (sequenceGrammar, sequenceGlue, jsonfactbase)
 	.replace (/~~/g,'\n');
+//    var functions = transpiler.ftranspile ('details.json', 'emitfunctions.ohm', 'emitfunctions.glue', 'emit functions');
     console.log (functions);
 }
-generatePipeline ();
+pipeline ();
