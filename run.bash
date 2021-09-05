@@ -10,7 +10,7 @@ catch () {
 }
 
 # sequence
-node --trace-uncaught sequence.js >sequence.pl
+node --trace-uncaught sequence.js sequence.drawio >sequence.pl
 
 ## create rect fact for every vertex that is not an edge/ellipse/text
 ## sequence.drawio file contains vertexes, and marks all edge and ellipse (and text)
@@ -35,7 +35,7 @@ tsort topo1.txt >topo.txt
 mv fb.pl seqfb.pl
 
 ## now do details.drawio
-node --trace-uncaught details.js >details.pl
+node --trace-uncaught details.js details.drawio >details.pl
 
 swipl -q \
       -g 'consult(details).' \
