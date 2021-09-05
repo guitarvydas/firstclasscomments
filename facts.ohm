@@ -1,6 +1,8 @@
 Facts {
   Main = Fact+
-  Fact = ident "(" ident "," Object ")."
+  Fact = ValueFact | OtherFact
+  ValueFact = "value" "(" ident "," string ")."
+  OtherFact = ident "(" ident "," Object ")."
   Object = string | ident | number
   ident = alnum+
   number = digit+

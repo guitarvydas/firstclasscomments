@@ -123,11 +123,14 @@ function refID (s, scope) {
     }
 }    
 
-/// generic
 function stripQuotes (s) {
     return s;
 }
 
 exports.stripQuotes = (s) => {
     return stripQuotes (s);
+}
+
+exports.mangleNewlines = (s) => {
+    return s.replace (/(\r\n|\r|\n)/g,'@~@');
 }
