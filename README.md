@@ -497,6 +497,8 @@ _Dead Code_ is not really an issue, but can be removed automatically at a later 
 
 - [_done: break transpiler code out into separate functions -- see transpiler.js/ftranspiler and transpiler.js/stranspiler_]
 
+- [_done: input .drawio files supplied on the command line_]
+
 
 # Appendix - GitHub
 
