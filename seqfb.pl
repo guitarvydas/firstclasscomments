@@ -15,14 +15,6 @@ cell(id6,"").
 cell(id7,"").
 cell(id8,"").
 cell(id9,"").
-contains(id4,id5).
-contains(id4,id6).
-contains(id4,id8).
-contains(id5,id9).
-contains(id6,id7).
-contains1(id4,id5).
-contains1(id4,id6).
-contains1(id4,id8).
 diagram(id1, "").
 diagramContains(id1, id10).
 diagramContains(id1, id11).
@@ -53,8 +45,6 @@ l(id7,510).
 l(id8,395).
 l(id9,380).
 name(id1, "sequence").
-portdirection(id7,input).
-portdirection(id9,output).
 r(id4,720).
 r(id5,400).
 r(id6,640).
@@ -99,3 +89,13 @@ y(id5, 280).
 y(id6, 280).
 y(id7, 295).
 y(id9, 295).
+contains1(id4,id5).
+contains1(id4,id6).
+contains1(id4,id8).
+contains(id4,id5).
+contains(id4,id6).
+contains(id4,id8).
+contains(id5,id9).
+contains(id6,id7).
+portdirection(id7,input).
+portdirection(id9,output).
