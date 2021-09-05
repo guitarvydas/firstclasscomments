@@ -1,7 +1,7 @@
 'use strict'
 
 var ohm = require ('ohm-js');
-
+var support = require ('./support.js');
 
 const glueGrammar =
       String.raw`
