@@ -2,7 +2,7 @@
   TopLevelComponent [lb diag component rb] = [[${lb}${diag}${component}${rb}\n]]
   Component [lb children connections diagram id inputs name outputs synccode rb] =
   [[
-\n\n${namify (name)} () {${stripQuotesAddNewlines (synccode) } ${stripQuotes (children) } }]]
+\n\n${support.namify (name)} () {${support.stripQuotesAddNewlines (synccode) } ${support.stripQuotes (children) } }]]
 
   ChildrenArrayPair [names] = [[${names}]]
 
@@ -13,7 +13,7 @@
       colon [c] = [[${c}]]
       quote [c] = [[${c}]]
       string [q1 @nqs q2] = [[${q1}${nqs}${q2} ]]
-      name [q1 @nqs q2] = [[${namify (nqs)}\n]]
+      name [q1 @nqs q2] = [[${support.namify (nqs)}\n]]
       notQuote [c] = [[${c}]]
 
       JSONconnection [lb name source target rb] = [[${lb}${name}${source}${target}${rb}]]
