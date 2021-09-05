@@ -33,11 +33,17 @@ swipl -g 'consult(fb).'  -g 'consult(onSameDiagram).' -g 'consult(portdirection)
 
 # pipeline
 allContains1
+cp fb.pl _seq1.pl
 printAllDeepContains
+cp fb.pl _seq2.pl
 printAllDirectContains
+cp fb.pl _seq3.pl
 designRuleRectanglesMustNotIntersectOnTheSameDiagram
+cp fb.pl _seq4.pl
 printAllPortContains
+cp fb.pl _seq5.pl
 printAllDirections
+cp fb.pl _seq6.pl
 
 
 # convert fb.pl to "structured" form

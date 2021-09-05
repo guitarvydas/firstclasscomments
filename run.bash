@@ -27,6 +27,7 @@ swipl -q \
 cat sequence.pl temp.pl | sort >fb.pl
 
 ./seq-run-aux.bash >sequence.json
+#./run-aux.bash >sequence.json
 
 node --trace-uncaught emittopological.js >topo1.txt
 tsort topo1.txt >topo.txt

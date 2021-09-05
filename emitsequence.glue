@@ -14,4 +14,4 @@
       JSONconnection [lb name source target rb] = [[${source} ${target}]]
 
     ComponentPortPair [ q1 name q2 colon lb component port rb ] = 
-      [[${namify (component)} ]]
+      [[${support.namify (component)} ]]
