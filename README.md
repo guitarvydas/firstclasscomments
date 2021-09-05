@@ -25,6 +25,7 @@ I show how to compile diagrams to running code.
 
 - yes, the source code is in the form of diagrams (see Discussion section)<img src="https://github.com/guitarvydas/jam0001/blob/guitarvydas/guitarvydas/sequence.png?raw=true" alt="sequence.png" style="zoom:67%;" />
 
+Note that we do not draw diagrams of the source code -- the diagrams _are_ the source code.
   
 
   <img src="https://github.com/guitarvydas/jam0001/blob/guitarvydas/guitarvydas/details.png?raw=true" alt="details.png" style="zoom:67%;" />
@@ -493,6 +494,13 @@ _Dead Code_ is not really an issue, but can be removed automatically at a later 
 - add hierarchical nodes, allow sub-sequences/details
 
 - strip out unneeded code from support.js.
+
+- [_done: break transpiler code out into separate functions -- see transpiler.js/ftranspiler and transpiler.js/stranspiler_]
+
+
+# Appendix - GitHub
+
+[The latest version of the code](https://github.com/guitarvydas/firstclasscomments).
 
 
 # Appendix

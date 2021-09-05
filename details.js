@@ -2,8 +2,8 @@ var transpiler = require('./transpiler.js');
 var pl = require('./pl.js');
 
 function pipeline () {
-
-    var drawioUncompressed = transpiler.ftranspile ('details.drawio', 'drawio.ohm', 'drawio.glue', 'uncompress');
+    var inputFile = process.argv[2];
+    var drawioUncompressed = transpiler.ftranspile (inputFile, 'drawio.ohm', 'drawio.glue', 'uncompress');
     var stylesExpanded = transpiler.stranspile (drawioUncompressed, 'styleexpander.ohm', 'styleexpander.glue', 'expand styles');
     var attributesElided = transpiler.stranspile (stylesExpanded, 'attributeelider.ohm', 'attributeelider.glue', 'elide attributes');
     var symbolTable = transpiler.stranspile (attributesElided, 'nametable.ohm', 'nametable.glue', 'symbol table');
