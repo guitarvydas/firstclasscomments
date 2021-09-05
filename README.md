@@ -4,6 +4,10 @@ Transpile diagrams to code.
 
 ## Introduction
 
+A continuation of the langjam code.
+
+The theme was "first-class comments".
+
 To me, 1st class comments means that:
 
 - if you change the comments, the execution (code) changes.
