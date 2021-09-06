@@ -50,7 +50,7 @@ t(id6,195).
 t(id7,160).
 t(id8,195).
 value(id4,"top level").
-value(id5,"process__A").
+value(id5,"process A").
 value(id6,"@~@echo hello@~@echo ... from process A@~@").
 value(id7,"process__B").
 value(id8,"@~@echo ... from process B@~@echo goodbye@~@").
@@ -86,13 +86,13 @@ contains(id4,id5).
 contains(id4,id7).
 contains(id5,id6).
 contains(id7,id8).
-factcomponentname(id4,"top level").
-factcomponentname(id5,"process__A").
-factcomponentname(id6,"c3").
-factcomponentname(id7,"process__B").
-factcomponentname(id8,"c4").
-unknowncomponentname(id2,"c1").
-unknowncomponentname(id3,"c2").
+factname(id4,"top level").
+factname(id5,"process A").
+factname(id6,"code1").
+factname(id7,"process__B").
+factname(id8,"code2").
+unknowncomponentname(id2,"u1").
+unknowncomponentname(id3,"u2").
 factcomponentcode(id2,"").
 factcomponentcode(id3,"").
 factcomponentcode(id4,"").

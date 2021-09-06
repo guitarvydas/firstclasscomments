@@ -23,7 +23,7 @@ height(id7,180).
 height(id8,125).
 name(id1,"Details").
 value(id4,"top level").
-value(id5,"process__A").
+value(id5,"process A").
 value(id6,"@~@echo hello@~@echo ... from process A@~@").
 value(id7,"process__B").
 value(id8,"@~@echo ... from process B@~@echo goodbye@~@").

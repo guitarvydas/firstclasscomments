@@ -1,6 +1,6 @@
 
 makecomponentcode(C):-
-    fillColor(C,"red"),
+    codebox(C),
     value(C,Code),
     format("factcomponentcode(~w,\"~w\").~n",[C,Code]),!.
 makecomponentcode(C):-
@@ -21,5 +21,8 @@ componentcode(C,Code):-
 
 printCode:-
     forall( component(C),
+	    makecomponentcode(C)
+	  ),
+    forall( codebox(C),
 	    makecomponentcode(C)
 	  ).

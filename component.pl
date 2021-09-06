@@ -2,7 +2,15 @@
 :- dynamic ellipse/2.
 
 component(C):-
-    rect(C,_).
+    rect(C,_),
+    \+ codebox(C).
+
+port(P):-
+    ellipse(P,_).
+
+codebox(C):-
+    rect(C,_),
+    fillColor(C,"red").
 
 component(Diagram,C,Name,Ins,Outs,SyncCode,Children,Connections) :-
     diagramContains(Diagram,C),
@@ -79,10 +87,10 @@ connectionOf(C,connection{name:ConnectionName,source:pair{component:SourceName,p
     source(E,SC),
     componentname(SC,SourcePort),
     contains(SourceParent,SC),
-    getname(C,SourceParent,SourceName),
+    getname(SourceParent,SourceName),
     target(E,TC),
     componentname(TC,TargetPort),
     contains(TargetParent,TC),
-    getname(C,TargetParent,TargetName),
+    getname(TargetParent,TargetName),
     gensym(x,ConnectionName).
     

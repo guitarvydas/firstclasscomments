@@ -1,7 +1,7 @@
 {"diagram":"id1", "toplevelcomponent":"id4"}
 
 {
-  "children": ["process__A", "process__B" ],
+  "children": ["process A", "process__B" ],
   "connections": [],
   "diagram":"id1",
   "id":"id4",
@@ -11,12 +11,12 @@
   "synccode":""
 }
 {
-  "children": ["c3" ],
+  "children": ["code1" ],
   "connections": [],
   "diagram":"id1",
   "id":"id5",
   "inputs": [],
-  "name":"process__A",
+  "name":"process A",
   "outputs": [],
   "synccode":""
 }
@@ -26,12 +26,12 @@
   "diagram":"id1",
   "id":"id6",
   "inputs": [],
-  "name":"c3",
+  "name":"code1",
   "outputs": [],
   "synccode":"@~@echo hello@~@echo ... from process A@~@"
 }
 {
-  "children": ["c4" ],
+  "children": ["code2" ],
   "connections": [],
   "diagram":"id1",
   "id":"id7",
@@ -46,7 +46,7 @@
   "diagram":"id1",
   "id":"id8",
   "inputs": [],
-  "name":"c4",
+  "name":"code2",
   "outputs": [],
   "synccode":"@~@echo ... from process B@~@echo goodbye@~@"
 }

@@ -99,3 +99,15 @@ contains(id5,id9).
 contains(id6,id7).
 portdirection(id7,input).
 portdirection(id9,output).
+factname(id4,"topLevel").
+factname(id5,"process A").
+factname(id6,"process B").
+factname(id7,"in").
+factname(id9,"fb").
+unknowncomponentname(id2,"u1").
+unknowncomponentname(id3,"u2").
+factcomponentcode(id2,"").
+factcomponentcode(id3,"").
+factcomponentcode(id4,"").
+factcomponentcode(id5,"").
+factcomponentcode(id6,"").
