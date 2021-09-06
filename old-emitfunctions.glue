@@ -3,7 +3,7 @@
   Component [lb children connections diagram id inputs name outputs synccode rb] =
   [[
 \n\n${support.namify (name)} () {
-${support.stripQuotes (synccode)}
+SYNC ${support.stripQuotes (synccode)}
 ${children}
 }]]
 
@@ -16,7 +16,7 @@ ${children}
       colon [c] = [[${c}]]
       quote [c] = [[${c}]]
       string [q1 @nqs q2] = [[${q1}${nqs}${q2} ]]
-      name [q1 @nqs q2] = [[ ${nqs}\n]]
+      name [q1 @nqs q2] = [[ ${support.namify (nqs)}\n]]
       notQuote [c] = [[${c}]]
 
       JSONconnection [lb name source target rb] = [[${lb}${name}${source}${target}${rb}]]

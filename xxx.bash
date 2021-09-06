@@ -1,3 +1,4 @@
+#!/bin/bash
 swipl -g 'use_module(library(http/json))' \
       -g 'consult(detfb).' \
       -g 'consult(component).' \

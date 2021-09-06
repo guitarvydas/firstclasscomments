@@ -2,33 +2,38 @@
 
 
 top__level () {
- 
- process__A
+
+process A
 process__B
- }
+
+}
 
 process__A () {
- 
- c3
- }
 
-c3 () {
+code1
+
+}
+
+code1 () {
 
 echo hello
 echo ... from process A
- 
-  }
+
+
+}
 
 process__B () {
- 
- c4
- }
 
-c4 () {
+code2
+
+}
+
+code2 () {
 
 echo ... from process B
 echo goodbye
- 
-  }
+
+
+}
 process__A
 process__B

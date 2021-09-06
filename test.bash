@@ -1,9 +1,4 @@
 #!/bin/bash
-# echo TEST INACTIVE
-# exit -1
-# node --trace-uncaught details.js
-
-#!/bin/bash
 
 clear
 set -e

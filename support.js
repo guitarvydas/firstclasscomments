@@ -50,7 +50,7 @@ var counter = 1;
 
 
 function newID(name, quoteds, scope) {
-    var s = stripQuotes (quoteds);
+    var s = stripQuotes (quoteds. trim ());
     scope.scopeModify (name, s);
     nameIndexTable[s] = counter;
     counter += 1;
@@ -123,19 +123,22 @@ function refID (s, scope) {
 }    
 
 function stripQuotes (s) {
-    if (s[0] === '"') {
-	return s
-	    .replace (/"/g,'');
-    } else {
-	return s;
-    }
+    var s1 = s.replace (/^(\")/,'');
+    var s2 = s1.replace (/([\"])$/,'');
+    var s3 = s2.replace (/^(\")/,'');
+    // process.stderr.write (s);
+    // process.stderr.write (" -> ");
+    // process.stderr.write (s1);
+    // process.stderr.write (" -> ");
+    // process.stderr.write (s2);
+    // process.stderr.write (" -> ");
+    // process.stderr.write (s3);
+    // process.stderr.write ('\n');
+    return s3;
 }
-// function stripQuotes (s) {
-//     return s;
-// }
 
 exports.stripQuotes = (s) => {
-    return stripQuotes (s);
+    return stripQuotes (s.trim ());
 }
 
 exports.mangleNewlines = (s) => {

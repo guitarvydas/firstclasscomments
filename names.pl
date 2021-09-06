@@ -1,29 +1,43 @@
 
-makecomponentname(C):-
-    fillColor(C,"red"),
-    gensym(c,Name),
-    format("factcomponentname(~w,\"~w\").~n",[C,Name]),
+makename(C):-
+    codebox(C),
+    gensym(code,Name),
+    format("factname(~w,\"~w\").~n",[C,Name]),
     !.
-makecomponentname(C):-
+makename(C):-
+    port(C),
     value(C,Name),
-    format("factcomponentname(~w,\"~w\").~n",[C,Name]),!.
-makecomponentname(C):-
-    gensym(c,Name),
+    format("factname(~w,\"~w\").~n",[C,Name]),
+    !.
+makename(C):-
+    component(C),
+    value(C,Name),
+    format("factname(~w,\"~w\").~n",[C,Name]),
+    !.
+makename(C):-
+    gensym(u,Name),
     format("unknowncomponentname(~w,\"~w\").~n",[C,Name]).
 
-getname(Parent,Child,Name):-
-    Child \= Parent,
-    factcomponentname(Child,Name),
+getname(Child,Name):-
+    factname(Child,Name),
     !.
-getname(_,_,self).
+getname(_,self).
 
 componentname(C,Name):-
-    factcomponentname(C,Name).
+    factname(C,Name).
 
 
 
 
 printNames:-
     forall( component(C),
-	    makecomponentname(C)
+	    makename(C)
+	  ),
+    forall( codebox(C),
+	    makename(C)
+	  ),
+    forall( port(C),
+	    makename(C)
 	  ).
+    
+    

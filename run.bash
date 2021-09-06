@@ -26,9 +26,18 @@ swipl -q \
 # augment the factbase (fb.pl) after every inferencing step
 cat sequence.pl temp.pl | sort >fb.pl
 
-./seq-run-aux.bash >sequence.json
-#./run-aux.bash >sequence.json
+#./seq-run-aux.bash >sequence.json
+./run-aux.bash >sequence.json
 
+regression=`diff -q gold-sequence.json sequence.json`
+if [ "" == "${regression}" ]
+then
+    echo regression OK
+else
+    echo regression FAIL
+    exit 1
+fi
+    
 node --trace-uncaught emittopological.js >topo1.txt
 tsort topo1.txt >topo.txt
 
