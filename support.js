@@ -6,6 +6,9 @@ var pako = require ('pako'); // npm install pako
 
 
 exports.decodeMxDiagram = (encoded) => {
+}    
+
+exports.inline_decodeMxDiagram = (encoded) => {
     process.stderr.write ('### support.js/decodeMxDiagram ###\n');
     var data = atob (encoded);
     var inf = pako.inflateRaw (
@@ -134,3 +137,47 @@ exports.stripQuotes = (s) => {
 exports.mangleNewlines = (s) => {
     return s.replace (/(\r\n|\r|\n)/g,'@~@');
 }
+
+
+////////////
+const http = require ('http');
+const https = require ('https');
+const host = 'localhost';
+const port = 8000;
+
+
+let options = {
+    host: 'localhost',
+    port: 8000,
+    method: 'POST',
+    header: {
+	'Accept': 'application/json',
+	'Content-Type': 'application/json; charset=UTF-8',
+	'Content-Length' : postData.length
+    }
+};
+
+let request = http.request (options, (res) => {
+    let postData = "/decodeMxDiagram";
+    if (res.statusCode !== 200) {
+	console.error(`Did not get a Created from the server. Code: ${res.statusCode}`);
+	res.resume();
+	return;
+    }
+    let data = '';
+    res.on ('data', (chunk) => {
+	data += chunk;
+    });
+
+    res.on ('close', () => {
+	console.log (data);
+    });
+    
+});
+
+request.write (postData);
+request.end ();
+
+request.on ('error', (err) => {
+    console.error (`Encountered an error trying to make a request: ${err.message}`);
+});
