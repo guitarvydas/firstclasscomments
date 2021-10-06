@@ -6,9 +6,11 @@ var pako = require ('pako'); // npm install pako
 
 
 exports.decodeMxDiagram = (encoded) => {
+    //reqDecodeMxDiagram ();
+    return inline_decodeMxDiagram (encoded);
 }    
 
-exports.inline_decodeMxDiagram = (encoded) => {
+function inline_decodeMxDiagram (encoded) {
     process.stderr.write ('### support.js/decodeMxDiagram ###\n');
     var data = atob (encoded);
     var inf = pako.inflateRaw (
@@ -138,46 +140,47 @@ exports.mangleNewlines = (s) => {
     return s.replace (/(\r\n|\r|\n)/g,'@~@');
 }
 
+/////
 
-////////////
 const http = require ('http');
-const https = require ('https');
-const host = 'localhost';
-const port = 8000;
 
-
-let options = {
-    host: 'localhost',
-    port: 8000,
-    method: 'POST',
-    header: {
-	'Accept': 'application/json',
-	'Content-Type': 'application/json; charset=UTF-8',
-	'Content-Length' : postData.length
-    }
+const options = { method: 'POST'
 };
 
-let request = http.request (options, (res) => {
-    let postData = "/decodeMxDiagram";
-    if (res.statusCode !== 200) {
-	console.error(`Did not get a Created from the server. Code: ${res.statusCode}`);
-	res.resume();
-	return;
-    }
-    let data = '';
-    res.on ('data', (chunk) => {
-	data += chunk;
-    });
+var data = '';
 
-    res.on ('close', () => {
-	console.log (data);
-    });
-    
-});
+function sendReq (fn_OK) {
+    let request = http.request ('http://localhost:8000/decodeMxDiagram',
+				options,
+				(res) => {
+				    if (res.statusCode !== 201) {
+					console.error (`Did not get an OK from the server. Code ${res.statusCode}`);
+					res.resume ();
+					return;
+				    }
+				
+				    res.on('data', (chunk) => { 
+					data += chunk;
+				    });
+				    res.on('close', () => {
+					return fn_OK (data);
+				    });
+				    
+				    request.on('error', (err) => {
+					console.error (err);
+				    });
+				});
+    const reqData = { message: "hello" };
+    request.write (JSON.stringify (reqData));
+    request.end ();
+}
 
-request.write (postData);
-request.end ();
 
-request.on ('error', (err) => {
-    console.error (`Encountered an error trying to make a request: ${err.message}`);
-});
+async function reqDecodeMxDiagram () { 
+    var p = (() => new Promise (fn_resolve => sendReq (fn_resolve))) ();
+    var returneddata = await p; 
+    return returneddata;
+}
+
+// var r = areq ();
+// (async () => { console.log (await r); })();

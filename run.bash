@@ -9,6 +9,11 @@ catch () {
     exit 1
 }
 
+# support server
+node supportServer &
+serverPid=`echo $!`
+echo server PID ${serverPid}
+
 # sequence
 node --trace-uncaught sequence.js >sequence.pl
 
@@ -57,3 +62,6 @@ mv fb.pl detfb.pl
 cat header.txt functions.txt topo.txt trailer.txt >final.bash
 ./unflattennewlines.bash <final.bash >final2.bash
 ./final2.bash
+
+echo killing support server
+kill -9 ${serverPid}

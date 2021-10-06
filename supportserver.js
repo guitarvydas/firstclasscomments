@@ -13,33 +13,34 @@ function decodeMxDiagram (encoded) {
 
 ////
 
+//https://www.digitalocean.com/community/tutorials/how-to-create-a-web-server-in-node-js-with-the-http-module
+
 const http = require ('http');
 const https = require ('https');
 const host = 'localhost';
 const port = 8000;
 
 const requestListener = function (req, res) {
-    var data = '';
+    var requestData = '';
     req.on('data', chunk => {
-	data += chunk;
+	requestData += chunk;
     });
     req.on('end', () => {
-	console.log ("data is: " + data);
+	console.log ("requestData is: " + data);
+	res.setHeader ("Content-Type", "application/json");
+	if (req.url === "/decodeMxDiagram") {
+	    console.log ("support: decodeMxDiagram");
+	    res.writeHead (201);
+	    res.end (decodeMxDiagram (requestData));
+	} else {
+	    console.log ("support: error");
+	    res.writeHead (404);
+	    res.end (JSON.stringify ({error: "Resource not found"}));
+	}
     });
-    res.setHeader ("Content-Type", "application/json");
-    if (req.url === "/decodeMxDiagram") {
-	console.log ("routes: decodeMxDiagram");
-	res.writeHead (200);
-	res.end (decodeMxDiagram (data));
-    } else {
-	console.log ("support: error");
-	res.writeHead (404);
-	res.end (JSON.stringify ({error: "Resource not found"}));
-    }
 }
 
 const server = http.createServer (requestListener);
 server.listen (port, host, () => {
-    console.log (`Server is running on http://${host}:${port}`);
+    console.log (`Support server is running on http://${host}:${port}`);
 });
-    
