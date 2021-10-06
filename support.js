@@ -6,6 +6,12 @@ var pako = require ('pako'); // npm install pako
 
 
 exports.decodeMxDiagram = (encoded) => {
+    //reqDecodeMxDiagram ();
+    return inline_decodeMxDiagram (encoded);
+}    
+
+function inline_decodeMxDiagram (encoded) {
+    process.stderr.write ('### support.js/decodeMxDiagram ###\n');
     var data = atob (encoded);
     var inf = pako.inflateRaw (
 	Uint8Array.from (data, c=>c.charCodeAt (0)), {to: 'string'})
@@ -145,12 +151,47 @@ exports.mangleNewlines = (s) => {
     return s.replace (/(\r\n|\r|\n)/g,'@~@');
 }
 
-exports.stripQuotesAddNewlines = (s) => {
-    var str = stripQuotes (s);
-    if (s === '') {
-	return s;
-    } else {
-	return '\n' + stripQuotes (s) + '\n';
-    }
+/////
+
+const http = require ('http');
+
+const options = { method: 'POST'
+};
+
+var data = '';
+
+function sendReq (fn_OK) {
+    let request = http.request ('http://localhost:8000/decodeMxDiagram',
+				options,
+				(res) => {
+				    if (res.statusCode !== 201) {
+					console.error (`Did not get an OK from the server. Code ${res.statusCode}`);
+					res.resume ();
+					return;
+				    }
+				
+				    res.on('data', (chunk) => { 
+					data += chunk;
+				    });
+				    res.on('close', () => {
+					return fn_OK (data);
+				    });
+				    
+				    request.on('error', (err) => {
+					console.error (err);
+				    });
+				});
+    const reqData = { message: "hello" };
+    request.write (JSON.stringify (reqData));
+    request.end ();
 }
 
+
+async function reqDecodeMxDiagram () { 
+    var p = (() => new Promise (fn_resolve => sendReq (fn_resolve))) ();
+    var returneddata = await p; 
+    return returneddata;
+}
+
+// var r = areq ();
+// (async () => { console.log (await r); })();
